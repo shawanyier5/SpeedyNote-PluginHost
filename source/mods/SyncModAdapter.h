@@ -29,6 +29,12 @@ public:
     bool initialize(QObject* app) override;
     void shutdown() override;
 
+    // 供同步设置面板使用（库 A 内部粘合层）
+    SyncMod::SyncConfig* config() const { return m_config; }
+    SyncMod::SyncManager* manager() const { return m_manager; }
+    // 设置面板保存后调用：重建后端与定时器，让改动立即生效
+    void reloadSettings();
+
 private:
     SyncMod::SyncConfig* m_config = nullptr;
     SyncMod::SyncManager* m_manager = nullptr;

@@ -1415,6 +1415,7 @@ if(SPEEDYNOTE_MODS)
     target_sources(speedynote PRIVATE
         "${MODHOST_DIR}/ModHost.cpp"
         "${MODHOST_DIR}/SyncModAdapter.cpp"
+        "${MODHOST_DIR}/SyncSettingsUI.cpp"
     )
     target_include_directories(speedynote PRIVATE "${MODHOST_DIR}")
     target_compile_definitions(speedynote PRIVATE SPEEDYNOTE_MODS)

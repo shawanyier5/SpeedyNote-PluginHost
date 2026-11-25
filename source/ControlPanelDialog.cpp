@@ -4,6 +4,11 @@
 #include "core/ShortcutManager.h"
 #include "core/DocumentViewport.h"
 
+#ifdef SPEEDYNOTE_MODS
+// PluginHost: 编译期 Mod 注入的同步设置页；关闭 Mod 时这段代码不存在
+#include "SyncSettingsUI.h"
+#endif
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFormLayout>
@@ -177,7 +182,12 @@ ControlPanelDialog::ControlPanelDialog(MainWindow *mainWindow, QWidget *parent)
 #endif
     createCacheTab();
     createAboutTab();
-    
+
+#ifdef SPEEDYNOTE_MODS
+    // PluginHost: 只在编译期 Mod 打开时增加"同步"设置页
+    SyncModUI::addSyncTab(tabWidget, this);
+#endif
+
     // === Buttons ===
     applyButton = new QPushButton(tr("Apply"));
     okButton = new QPushButton(tr("OK"));
