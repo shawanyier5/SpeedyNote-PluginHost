@@ -159,12 +159,16 @@ if(WIN32)
     endif()
     # Poppler removed - using MuPDF exclusively for PDF rendering
 
-    # Auto-enable Windows Ink OCR on 64-bit Qt6 Windows builds
-    if(NOT USE_QT5 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(SPEEDYNOTE_ENABLE_WINDOWS_INK_OCR ON CACHE BOOL "" FORCE)
-        message(STATUS "Windows Ink OCR: ENABLED (64-bit Qt6 Windows)")
+    # Auto-enable Windows Ink OCR on 64-bit Qt6 Windows builds.
+    # PluginHost: respect an explicit -DSPEEDYNOTE_ENABLE_WINDOWS_INK_OCR=OFF,
+    # so builds without the Windows SDK / C++WinRT can still compile.
+    if(NOT DEFINED SPEEDYNOTE_ENABLE_WINDOWS_INK_OCR AND NOT USE_QT5 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(SPEEDYNOTE_ENABLE_WINDOWS_INK_OCR ON CACHE BOOL "")
+        message(STATUS "Windows Ink OCR: ENABLED (64-bit Qt6 Windows, auto)")
+    elseif(SPEEDYNOTE_ENABLE_WINDOWS_INK_OCR)
+        message(STATUS "Windows Ink OCR: ENABLED (explicit)")
     else()
-        message(STATUS "Windows Ink OCR: DISABLED (requires 64-bit Qt6)")
+        message(STATUS "Windows Ink OCR: DISABLED")
     endif()
 
     # MuPDF for PDF export
@@ -1413,7 +1417,6 @@ if(SPEEDYNOTE_MODS)
     )
     target_include_directories(speedynote PRIVATE "${MODHOST_DIR}")
     target_compile_definitions(speedynote PRIVATE SPEEDYNOTE_MODS)
-    target_link_libraries(speedynote PRIVATE SpeedyNoteSyncMod)
 
     message(STATUS "Mods: ENABLED (compile-time static, SyncMod linked)")
 endif()
@@ -1665,4 +1668,13 @@ elseif(UNIX AND NOT ANDROID)
             install(FILES ${ONNXRUNTIME_SO_FILES} DESTINATION lib)
         endif()
     endif()
+endif()
+
+# ============================================================================
+# Mod link (appended at end so keyword-style signature matches the target's
+# existing private links; placing it earlier caused a signature conflict)
+# ============================================================================
+if(SPEEDYNOTE_MODS)
+    # Windows 分支首个链接调用是 plain 签名，这里保持一致
+    target_link_libraries(speedynote SpeedyNoteSyncMod)
 endif()

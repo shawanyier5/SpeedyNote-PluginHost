@@ -59,6 +59,7 @@ signals:
     void modInitialized(const QString& id, bool ok, const QString& message);
 
 private:
+    friend class IMod;
     explicit ModHost(QObject* parent = nullptr);
     QVector<IMod*> m_mods;
     static ModHost* s_instance;
@@ -69,6 +70,6 @@ private:
 // IMod 构造函数会自动把自己注册进宿主；这里只需创建一个全局静态实例。
 // 用函数级静态（由静态对象构造触发）避开跨编译单元初始化顺序问题。
 #define REGISTER_MOD(ClassName) \
-    static ClassName ClassName##_instance
+    static ClassName ClassName##_instance;
 
 } // namespace ModHostNS

@@ -20,7 +20,7 @@ class SyncModAdapter : public QObject, public ModHostNS::IMod {
     Q_OBJECT
 
 public:
-    SyncModAdapter();
+    explicit SyncModAdapter(QObject* parent = nullptr);
     ~SyncModAdapter() override;
 
     // IMod 接口
