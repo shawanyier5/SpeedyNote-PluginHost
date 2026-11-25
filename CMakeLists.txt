@@ -1409,6 +1409,7 @@ if(SPEEDYNOTE_MODS)
     set(MODHOST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source/mods")
     set(SYNCMOD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../SpeedyNote-SyncMod")
 
+    set(SYNCMOD_MINIZ_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/miniz" CACHE PATH "" FORCE)
     add_subdirectory("${SYNCMOD_DIR}" "${CMAKE_BINARY_DIR}/syncmod")
 
     target_sources(speedynote PRIVATE
