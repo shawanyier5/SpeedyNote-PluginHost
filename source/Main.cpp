@@ -14,6 +14,10 @@
 #include <QFont>
 #include <algorithm>
 
+#ifdef SPEEDYNOTE_MODS
+#include "mods/ModHost.h"
+#endif
+
 #include "MainWindow.h"
 #include "ui/launcher/Launcher.h"
 #include "platform/SystemNotification.h"
@@ -1225,6 +1229,10 @@ int main(int argc, char* argv[])
     app.setOrganizationName("SpeedyNote");
     app.setApplicationName("App");
 
+#ifdef SPEEDYNOTE_MODS
+    ModHostNS::ModHost::instance()->initializeAll(&app);
+#endif
+
 #ifdef Q_OS_WIN
     applyWindowsPalette(app);
     applyWindowsFonts(app);
@@ -1537,6 +1545,10 @@ int main(int argc, char* argv[])
     }
 
     int exitCode = app.exec();
+
+#ifdef SPEEDYNOTE_MODS
+    ModHostNS::ModHost::instance()->shutdownAll();
+#endif
 
     return exitCode;
 }

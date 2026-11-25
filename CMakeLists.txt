@@ -14,6 +14,7 @@ option(SPEEDYNOTE_ENABLE_WINDOWS_INK_OCR "Enable Windows Ink handwriting recogni
 option(SPEEDYNOTE_ENABLE_MLKIT_INK_OCR "Enable ML Kit Digital Ink OCR (Android/iOS)" OFF)
 option(SPEEDYNOTE_ENABLE_VISION_OCR "Enable Apple Vision OCR (macOS)" OFF)
 option(SPEEDYNOTE_ENABLE_PADDLE_OCR "Enable PaddleOCR raster OCR (Linux, via vendored ONNX Runtime)" OFF)
+option(SPEEDYNOTE_MODS "Enable compile-time mod host (SpeedyNote-PluginHost)" OFF)
 
 if(ENABLE_DEBUG_OUTPUT)
     add_compile_definitions(SPEEDYNOTE_DEBUG)
@@ -1395,6 +1396,28 @@ target_compile_definitions(speedynote PRIVATE
     APP_VERSION_MINOR=${PROJECT_VERSION_MINOR}
     APP_VERSION_PATCH=${PROJECT_VERSION_PATCH}
 )
+
+# ============================================================================
+# Compile-time Mod Host (SpeedyNote-PluginHost / SpeedyNote-SyncMod)
+# 关闭 SPEEDYNOTE_MODS 时下面整块不生效，行为与原版完全一致。
+# ============================================================================
+if(SPEEDYNOTE_MODS)
+    set(MODHOST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source/mods")
+    set(SYNCMOD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../SpeedyNote-SyncMod")
+
+    add_subdirectory("${SYNCMOD_DIR}" "${CMAKE_BINARY_DIR}/syncmod")
+
+    target_sources(speedynote PRIVATE
+        "${MODHOST_DIR}/ModHost.cpp"
+        "${MODHOST_DIR}/SyncModAdapter.cpp"
+    )
+    target_include_directories(speedynote PRIVATE "${MODHOST_DIR}")
+    target_compile_definitions(speedynote PRIVATE SPEEDYNOTE_MODS)
+    target_link_libraries(speedynote PRIVATE SpeedyNoteSyncMod)
+
+    message(STATUS "Mods: ENABLED (compile-time static, SyncMod linked)")
+endif()
+
 if(SPEEDYNOTE_ENABLE_MLKIT_INK_OCR)
     target_compile_definitions(speedynote PRIVATE SPEEDYNOTE_HAS_MLKIT_INK)
 endif()
