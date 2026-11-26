@@ -1,3 +1,16 @@
+> ## 派生版本声明 / Fork Notice
+>
+> **本仓库是 [alpha-liu-01/SpeedyNote](https://github.com/alpha-liu-01/SpeedyNote) 的派生版本**，由 AI 辅助重构改造，用于个人 Win11 + Android 双设备同步场景。
+>
+> - **原作者**：alpha-liu-01（原项目 GPL-3.0，版权归原作者所有）
+> - **本派生版**：SpeedyNote-PluginHost（编译期 Mod + 多端同步）
+> - **改造方式**：AI（WorkBuddy）辅助完成，非原作者维护，问题请勿打扰原作者
+> - **改了什么 / 如何重放**：见 [PLUGINHOST.md](./PLUGINHOST.md) 和 [patches/APPLY.md](./patches/APPLY.md)
+>
+> 作者内核代码（Document / Viewport / strokes / pdf）**零改动**，全部改动用 `#ifdef SPEEDYNOTE_MODS` 包裹。
+
+---
+
 # SpeedyNote
 
 <div align="center">
