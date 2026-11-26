@@ -43,6 +43,11 @@ public:
      */
     void switchToKeyboardShortcutsTab();
 
+#ifdef SPEEDYNOTE_MODS
+    // PluginHost: 直接打开"同步"标签页（供主界面菜单调用）
+    void switchToSyncTab();
+#endif
+
 protected:
     /**
      * @brief Override done() to fix Android keyboard crash (BUG-A001).

@@ -215,6 +215,18 @@ ControlPanelDialog::ControlPanelDialog(MainWindow *mainWindow, QWidget *parent)
     loadSettings();
 }
 
+#ifdef SPEEDYNOTE_MODS
+void ControlPanelDialog::switchToSyncTab()
+{
+    for (int i = 0; i < tabWidget->count(); ++i) {
+        if (tabWidget->tabText(i) == QStringLiteral("同步")) {
+            tabWidget->setCurrentIndex(i);
+            return;
+        }
+    }
+}
+#endif
+
 void ControlPanelDialog::switchToKeyboardShortcutsTab()
 {
     // Find the "Shortcuts" tab and switch to it

@@ -156,6 +156,13 @@ static QFileDialog::Options bundleDialogOptions()
 #endif
 // #include "HandwritingLineEdit.h"
 #include "ControlPanelDialog.h"  // Phase CP.1: Re-enabled with cleaned up tabs
+
+#ifdef SPEEDYNOTE_MODS
+// PluginHost: 主菜单里的同步入口
+#include "SyncSettingsUI.h"
+#include "SyncModAdapter.h"
+#include "SyncManager.h"
+#endif
 #include "ui/dialogs/DocumentSettingsDialog.h"  // Per-document override panel
 #include "ui/dialogs/CopyPagesToDocDialog.h"  // Plan D1: cross-document page copy
 // #include "LauncherWindow.h" // Phase 3.1: Disconnected - LauncherWindow will be re-linked later
@@ -1048,6 +1055,23 @@ void MainWindow::setupUi() {
     overflowMenu->addSeparator();
     QAction *importPagesDebugAction = overflowMenu->addAction(tr("Import Pages from Other Doc (Debug)..."));
     connect(importPagesDebugAction, &QAction::triggered, this, &MainWindow::importPagesFromOtherDocDebug);
+#endif
+
+#ifdef SPEEDYNOTE_MODS
+    // PluginHost: 同步入口直接放在主菜单，避免藏在设置标签栏滚动区里找不到
+    QAction *syncNowAction = overflowMenu->addAction(tr("立即同步"));
+    connect(syncNowAction, &QAction::triggered, this, [this]() {
+        SyncModAdapter* adapter = SyncModUI::findAdapterForMenu();
+        if (adapter && adapter->manager())
+            adapter->manager()->syncNow();
+    });
+    QAction *syncSettingsAction = overflowMenu->addAction(tr("同步设置..."));
+    connect(syncSettingsAction, &QAction::triggered, this, [this]() {
+        ControlPanelDialog dialog(this, this);
+        dialog.switchToSyncTab();
+        dialog.exec();
+    });
+    overflowMenu->addSeparator();
 #endif
 
     QAction *openControlPanelAction = overflowMenu->addAction(tr("Settings"));

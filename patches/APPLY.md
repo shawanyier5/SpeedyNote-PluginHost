@@ -61,6 +61,51 @@ cp -r SpeedyNote-PluginHost/mods/. SpeedyNote/source/mods/
 #endif
 ```
 
+**改动 3** — `switchToKeyboardShortcutsTab()` 之前加一个跳转方法（给主菜单"同步设置"用）：
+```cpp
+#ifdef SPEEDYNOTE_MODS
+void ControlPanelDialog::switchToSyncTab()
+{
+    for (int i = 0; i < tabWidget->count(); ++i) {
+        if (tabWidget->tabText(i) == QStringLiteral("同步")) {
+            tabWidget->setCurrentIndex(i);
+            return;
+        }
+    }
+}
+#endif
+```
+ControlPanelDialog.h 里对应加声明（同样用 `#ifdef SPEEDYNOTE_MODS` 包裹）。
+
+## 步骤 3.5：MainWindow.cpp（2 处）
+
+**改动 1** — include 区（`ControlPanelDialog.h` 之后）：
+```cpp
+#ifdef SPEEDYNOTE_MODS
+#include "SyncSettingsUI.h"
+#include "SyncModAdapter.h"
+#include "SyncManager.h"
+#endif
+```
+
+**改动 2** — `overflowMenu` 里、`Settings` 菜单项之前插入：
+```cpp
+#ifdef SPEEDYNOTE_MODS
+    QAction *syncNowAction = overflowMenu->addAction(tr("立即同步"));
+    connect(syncNowAction, &QAction::triggered, this, [this]() {
+        SyncModAdapter* adapter = SyncModUI::findAdapterForMenu();
+        if (adapter && adapter->manager()) adapter->manager()->syncNow();
+    });
+    QAction *syncSettingsAction = overflowMenu->addAction(tr("同步设置..."));
+    connect(syncSettingsAction, &QAction::triggered, this, [this]() {
+        ControlPanelDialog dialog(this, this);
+        dialog.switchToSyncTab();
+        dialog.exec();
+    });
+    overflowMenu->addSeparator();
+#endif
+```
+
 ## 步骤 4：CMakeLists.txt
 
 **改动 1** — option 区加开关：
@@ -109,9 +154,10 @@ endif()
 ```bash
 # 1. 重新下载上游源码覆盖 SpeedyNote/（保留 source/mods/ 目录）
 # 2. 重做上面 4 步；行号会漂移，用关键代码字符串定位
-# 3. git diff --stat 检查只有 3 个文件：
+# 3. git diff --stat 检查只有 4 个文件：
 #      source/Main.cpp
-#      source/ControlPanelDialog.cpp
+#      source/MainWindow.cpp
+#      source/ControlPanelDialog.cpp + .h
 #      CMakeLists.txt
 # 4. source/core/、source/strokes/、source/pdf/ 等核心目录必须零改动
 # 5. 重新 configure + build 验证
@@ -122,5 +168,5 @@ endif()
 ```bash
 cd SpeedyNote
 git diff --stat
-# 应只显示 Main.cpp、ControlPanelDialog.cpp、CMakeLists.txt
+# 应只显示 Main.cpp、MainWindow.cpp、ControlPanelDialog.cpp/.h、CMakeLists.txt
 ```

@@ -13,8 +13,12 @@
 
 class QTabWidget;
 class QWidget;
+class SyncModAdapter;
 
 namespace SyncModUI {
+
+// 供主界面菜单获取同步适配器（未启用 Mod 时返回 nullptr）
+SyncModAdapter* findAdapterForMenu();
 
 // 往设置面板追加"同步"页；Mod 未初始化时也能安全调用
 void addSyncTab(QTabWidget* tabWidget, QWidget* parent = nullptr);

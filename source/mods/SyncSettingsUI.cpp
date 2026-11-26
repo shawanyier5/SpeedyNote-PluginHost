@@ -25,15 +25,22 @@
 
 namespace SyncModUI {
 
-namespace {
-
-SyncModAdapter* findAdapter()
+// 供主界面菜单调用（外部链接）
+SyncModAdapter* findAdapterForMenu()
 {
     for (ModHostNS::IMod* mod : ModHostNS::ModHost::instance()->mods()) {
         if (mod && mod->id() == QStringLiteral("sync"))
             return dynamic_cast<SyncModAdapter*>(mod);
     }
     return nullptr;
+}
+
+namespace {
+
+// 文件内的简写
+static SyncModAdapter* findAdapter()
+{
+    return findAdapterForMenu();
 }
 
 // 目录选择行：输入框 + 浏览按钮
