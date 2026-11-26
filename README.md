@@ -8,6 +8,8 @@
 > - **改了什么 / 如何重放**：见 [PLUGINHOST.md](./PLUGINHOST.md) 和 [patches/APPLY.md](./patches/APPLY.md)
 >
 > 作者内核代码（Document / Viewport / strokes / pdf）**零改动**，全部改动用 `#ifdef SPEEDYNOTE_MODS` 包裹。
+>
+> **版本命名规则**：当前为 `SpeedyNote插件版 1.0`；小改版依次 `1.1`、`1.2`…；大版本更新依次为 `2.1`、`3.1`…（大版本号 + 该大版本下的首个序号）。
 
 ---
 

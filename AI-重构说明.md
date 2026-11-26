@@ -9,7 +9,7 @@
 | 原始项目 | [alpha-liu-01/SpeedyNote](https://github.com/alpha-liu-01/SpeedyNote) |
 | 原作者 | alpha-liu-01 |
 | 许可证 | GPL-3.0（版权归原作者，本派生版沿用） |
-| 派生版本 | SpeedyNote-PluginHost（本地版号 `v1.6.3-mod1`） |
+| 派生版本 | SpeedyNote-PluginHost（本地版号 `SpeedyNote插件版 1.0`） |
 | 改造者 | **AI（WorkBuddy）辅助重构**，非原作者维护 |
 | 配套仓库 | `SpeedyNote-SyncMod`（同步模块静态库） |
 
